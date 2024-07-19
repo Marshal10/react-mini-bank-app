@@ -27,6 +27,15 @@ function reducer(state, action) {
         balance: state.balance - 50,
       };
 
+    case "requestLoan":
+      if (state.loan === 0) {
+        console.log("loan accepted");
+        return { ...state, loan: 5000, balance: state.balance + 5000 };
+      } else {
+        console.log("loan rejected");
+        return { ...state };
+      }
+
     default:
       console.log("Unknown action type");
   }
@@ -75,7 +84,12 @@ export default function App() {
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button
+          onClick={() => {
+            dispatch({ type: "requestLoan" });
+          }}
+          disabled={!isActive}
+        >
           Request a loan of 5000
         </button>
       </p>
