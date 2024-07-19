@@ -15,6 +15,18 @@ function reducer(state, action) {
         balance: 500,
       };
 
+    case "depositMoney":
+      return {
+        ...state,
+        balance: state.balance + 150,
+      };
+
+    case "withdrawMoney":
+      return {
+        ...state,
+        balance: state.balance - 50,
+      };
+
     default:
       console.log("Unknown action type");
   }
@@ -43,12 +55,22 @@ export default function App() {
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button
+          onClick={() => {
+            dispatch({ type: "depositMoney" });
+          }}
+          disabled={!isActive}
+        >
           Deposit 150
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button
+          onClick={() => {
+            dispatch({ type: "withdrawMoney" });
+          }}
+          disabled={!isActive}
+        >
           Withdraw 50
         </button>
       </p>
