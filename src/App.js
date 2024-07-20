@@ -4,6 +4,7 @@ const initialState = {
   balance: 0,
   loan: 0,
   isActive: false,
+  deposit: 0,
 };
 
 function reducer(state, action) {
@@ -15,10 +16,16 @@ function reducer(state, action) {
         balance: 500,
       };
 
+    case "updateDeposit":
+      return {
+        ...state,
+        deposit: +action.payload,
+      };
+
     case "depositMoney":
       return {
         ...state,
-        balance: state.balance + 150,
+        balance: state.balance + state.deposit,
       };
 
     case "withdrawMoney":
@@ -57,7 +64,7 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ balance, loan, isActive }, dispatch] = useReducer(
+  const [{ balance, loan, isActive, deposit }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -79,13 +86,21 @@ export default function App() {
         </button>
       </p>
       <p>
+        <input
+          type="number"
+          disabled={!isActive}
+          value={deposit}
+          onChange={(e) =>
+            dispatch({ type: "updateDeposit", payload: e.target.value })
+          }
+        ></input>
         <button
           onClick={() => {
             dispatch({ type: "depositMoney" });
           }}
           disabled={!isActive}
         >
-          Deposit 150
+          Deposit
         </button>
       </p>
       <p>
