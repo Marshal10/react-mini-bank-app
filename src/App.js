@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 
 const initialState = {
   balance: 0,
@@ -29,9 +29,10 @@ function reducer(state, action) {
       };
 
     case "withdrawMoney":
+      if (action.payload > state.balance) return { ...state };
       return {
         ...state,
-        balance: state.balance - 50,
+        balance: state.balance - action.payload,
       };
 
     case "requestLoan":
@@ -68,6 +69,7 @@ export default function App() {
     reducer,
     initialState
   );
+  const [withdraw, setWithdraw] = useState(0);
 
   return (
     <div className="App">
@@ -104,13 +106,19 @@ export default function App() {
         </button>
       </p>
       <p>
+        <input
+          type="number"
+          disabled={!isActive}
+          value={withdraw}
+          onChange={(e) => setWithdraw((w) => +e.target.value)}
+        ></input>
         <button
           onClick={() => {
-            dispatch({ type: "withdrawMoney" });
+            dispatch({ type: "withdrawMoney", payload: withdraw });
           }}
           disabled={!isActive}
         >
-          Withdraw 50
+          Withdraw
         </button>
       </p>
       <p>
