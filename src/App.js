@@ -26,6 +26,7 @@ function reducer(state, action) {
       return {
         ...state,
         balance: state.balance + state.deposit,
+        deposit: 0,
       };
 
     case "withdrawMoney":
