@@ -3,6 +3,7 @@ import { useReducer, useState } from "react";
 const initialState = {
   balance: 0,
   loan: 0,
+  loanRequest: 0,
   isActive: false,
   deposit: 0,
 };
@@ -36,10 +37,20 @@ function reducer(state, action) {
         balance: state.balance - action.payload,
       };
 
+    case "updateLoan":
+      return {
+        ...state,
+        loanRequest: action.payload,
+      };
+
     case "requestLoan":
       if (state.loan === 0) {
         console.log("loan accepted");
-        return { ...state, loan: 5000, balance: state.balance + 5000 };
+        return {
+          ...state,
+          loan: state.loanRequest,
+          balance: state.balance + state.loanRequest,
+        };
       } else {
         console.log("loan rejected");
         return { ...state };
@@ -50,6 +61,7 @@ function reducer(state, action) {
         ...state,
         balance: state.balance - state.loan,
         loan: 0,
+        loanRequest: 0,
       };
 
     case "closeAccount":
@@ -66,10 +78,8 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ balance, loan, isActive, deposit }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ balance, loan, isActive, deposit, loanRequest }, dispatch] =
+    useReducer(reducer, initialState);
   const [withdraw, setWithdraw] = useState(0);
 
   return (
@@ -94,7 +104,7 @@ export default function App() {
           disabled={!isActive}
           value={deposit}
           onChange={(e) =>
-            dispatch({ type: "updateDeposit", payload: e.target.value })
+            dispatch({ type: "updateDeposit", payload: +e.target.value })
           }
         ></input>
         <button
@@ -123,13 +133,21 @@ export default function App() {
         </button>
       </p>
       <p>
+        <input
+          type="number"
+          disabled={!isActive}
+          value={loanRequest}
+          onChange={(e) =>
+            dispatch({ type: "updateLoan", payload: +e.target.value })
+          }
+        ></input>
         <button
           onClick={() => {
             dispatch({ type: "requestLoan" });
           }}
           disabled={!isActive}
         >
-          Request a loan of 5000
+          Request a loan
         </button>
       </p>
       <p>
